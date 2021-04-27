@@ -57,7 +57,7 @@
 	 ("C-d" . ivy-reverse-i-search-kill))
   :config
   (ivy-mode 1)
-)
+  )
 
 ;; Doom Modeline
 (use-package doom-modeline
@@ -67,14 +67,24 @@
   )
 
 ;; Doom Themes
-(use-package doom-themes)
+(use-package doom-themes
+  :init (load-theme 'doom-dracula t)
+)
+
+;; NOTE: The first time you load your configuration on a new machine, you'll
+;; need to run the following command interactively so that mode line icons
+;; display correctly:
+;;
+;; M-X all-the-icons-install-fonts
+(use-package all-the-icons)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(doom-modeline use-package ivy command-log-mode)))
+ '(package-selected-packages
+   '(hydra evil-collection evil general helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -130,3 +140,59 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
+
+;; General (for easy keybindings)
+(use-package general
+  :config
+  (general-create-definer sb/leader-keys
+    :keymaps '(normal insert visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
+
+  (sb/leader-keys
+   "t"  '(:ignore t :which-key "toggles")
+   "tc" '(comment-line :which-key "toggle comment")
+   "s"  '(:ignore s :which-key "settings")
+   "st" '(counsel-load-theme :which-key "choose theme")
+   "ss" '(hydra-text-scale/body :which-key "scale text")
+  )
+)
+  
+(general-define-key
+ "C-M-j" 'counsel-switch-buffer
+)
+
+;; Evil Keybindings
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motoins even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal)
+)
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init)
+)
+
+(use-package hydra)
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t)
+)
