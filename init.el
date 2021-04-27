@@ -18,11 +18,12 @@
 (require 'package)
 
 (setq package-archives
-      '(("melpa" . "https://melpa.org/packages/")
-	; ("melpa-stable" . "https://stable.melpa.org/packages/")
-	("org" . "https://orgmode.org/elpa/")
-	("elpa" . "https://elpa.gnu.org/packages/")
-       )
+    '(
+        ("melpa" . "https://melpa.org/packages/")
+	    ; ("melpa-stable" . "https://stable.melpa.org/packages/")
+	    ("org" . "https://orgmode.org/elpa/")
+	    ("elpa" . "https://elpa.gnu.org/packages/")
+    )
 )
 
 (package-initialize)
@@ -58,12 +59,15 @@
   (ivy-mode 1)
 )
 
-; Doom Modeline
+;; Doom Modeline
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
-  :custom (doom-modeline-height 15))
-)
+  :custom (doom-modeline-height 15)
+  )
+
+;; Doom Themes
+(use-package doom-themes)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -77,3 +81,52 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; Line Numbers
+(column-number-mode)
+(global-display-line-numbers-mode t)
+;; Disable line numbers for some modes
+(dolist (mode '(
+                org-mode-hook
+		        term-mode-hook
+		        shell-mode-hook
+                eshell-mode-hook
+                )
+	    )
+(add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;; Rainbow Delimiters
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; Which Key
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0)
+)
+
+;; Ivy Rich
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+;; Counsel
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+         ("C-x b" . counsel-ibuffer)
+         ("C-x C-f" . counsel-find-file)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history)))
+
+;; Helpful
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
