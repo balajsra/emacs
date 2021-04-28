@@ -9,7 +9,8 @@
 
 (setq visible-bell t) ; Set up the visible bell
 
-; (set-face-attribute 'default nil :font "Fira Code" :height 280)
+;; Font setup
+(set-face-attribute 'default nil :font "FiraCode Nerd Font" :height 120)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -84,7 +85,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(hydra evil-collection evil general helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy command-log-mode)))
+   '(forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy command-log-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -114,7 +115,7 @@
   :init (which-key-mode)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0)
+  (setq which-key-idle-delay 0.1)
 )
 
 ;; Ivy Rich
@@ -188,6 +189,7 @@
   (evil-collection-init)
 )
 
+;; Hydra
 (use-package hydra)
 
 (defhydra hydra-text-scale (:timeout 4)
@@ -196,3 +198,39 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t)
 )
+
+;; Projectile
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/Projects")
+    (setq projectile-project-search-path '("~/Projects/Personal" "~/Projects/UMICH"))
+  )
+  (when (file-directory-p "~/.config")
+    (setq projectile-project-search-path '("~/.config"))
+  )
+  (setq projectile-switch-project-action #'projectile-dired)
+)
+
+(use-package counsel-projectile
+  :config (counsel-projectile-mode)
+)
+
+;; Magit
+(use-package magit
+  ;; :commands (magit-status magit-get-current-branch)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+)
+
+;; NOTE: evil-magit was removed from MELPA and now a part of evil-collection
+;; (use-package evil-magit
+;;   :after magit
+;; )
+
+;; OPTIONAL: This will add GitHub integration to magit, but requires some token setup
+;; (use-package forge)
