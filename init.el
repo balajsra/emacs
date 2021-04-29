@@ -1,29 +1,13 @@
-(setq inhibit-startup-message t) ; Disable startup message
-
-(scroll-bar-mode -1)  ; Disable visible scrollbar
-(tool-bar-mode -1)    ; Disable the toolbar
-(tooltip-mode -1)     ; Disable tooltips
-(set-fringe-mode 10)  ; Give some breathing room
-
-(menu-bar-mode -1)    ; Disable the menu bar
-
-(setq visible-bell t) ; Set up the visible bell
-
-;; Font setup
-(set-face-attribute 'default nil :font "FiraCode Nerd Font" :height 120)
-
-;; Make ESC quit prompts
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(defvar sb/default-font-size 115)
+(defvar sb/default-variable-font-size 115)
+(defvar sb/modeline-height 15)
 
 ;; Initialize package sources
 (require 'package)
 
-(setq package-archives
-      '(("melpa" . "https://melpa.org/packages/")
-	("org"   . "https://orgmode.org/elpa/")
-	("elpa"  . "https://elpa.gnu.org/packages/")
-       )
-)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org"   . "https://orgmode.org/elpa/")
+                         ("elpa"  . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -36,147 +20,38 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-; (use-package command-log-mode)
+(setq inhibit-startup-message t) ; Disable startup message
 
-; Ivy Autocompletion
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
-	 ("C-d" . ivy-switch-buffer-kill)
-	 :map ivy-reverse-i-search-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1)
-  )
+(scroll-bar-mode -1)  ; Disable visible scrollbar
+(tool-bar-mode -1)    ; Disable the toolbar
+(tooltip-mode -1)     ; Disable tooltips
+(set-fringe-mode 10)  ; Give some breathing room
 
-;; Doom Modeline
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
-  :custom (doom-modeline-height 15)
-)
+(menu-bar-mode -1)    ; Disable the menu bar
 
-;; ;; Doom Themes
-;; (use-package doom-themes
-;;   :init (load-theme 'doom-dracula t)
-;; )
-
-;; Dracula Pro Theme
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-(load-theme 'dracula-pro t)
-
-;; NOTE: The first time you load your configuration on a new machine, you'll
-;; need to run the following command interactively so that mode line icons
-;; display correctly:
-;;
-;; M-X all-the-icons-install-fonts
-(use-package all-the-icons)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd" "#f8f8f2"])
- '(custom-safe-themes
-   '("64811e7fdbf77f278cf304e27f901f1095cc0090b5c032b0a9759c4df3fa82cc" "e6ff132edb1bfa0645e2ba032c44ce94a3bd3c15e3929cdf6c049802cf059a2a" "e5c595b20563da64003b24f655310089a14e5741c681c5072f24a4f376b8e2ce" default))
- '(fci-rule-color "#6272a4")
- '(jdee-db-active-breakpoint-face-colors (cons "#1E2029" "#bd93f9"))
- '(jdee-db-requested-breakpoint-face-colors (cons "#1E2029" "#50fa7b"))
- '(jdee-db-spec-breakpoint-face-colors (cons "#1E2029" "#565761"))
- '(objed-cursor-color "#ff5555")
- '(package-selected-packages
-   '(visual-fill-column org-bullets autothemer forge evil-magit magit counsel-projectile projectile hydra evil-collection evil general helpful counsel ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy command-log-mode))
- '(pdf-view-midnight-colors (cons "#f8f8f2" "#282a36"))
- '(rustic-ansi-faces
-   ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd" "#f8f8f2"])
- '(vc-annotate-background "#282a36")
- '(vc-annotate-color-map
-   (list
-    (cons 20 "#50fa7b")
-    (cons 40 "#85fa80")
-    (cons 60 "#bbf986")
-    (cons 80 "#f1fa8c")
-    (cons 100 "#f5e381")
-    (cons 120 "#face76")
-    (cons 140 "#ffb86c")
-    (cons 160 "#ffa38a")
-    (cons 180 "#ff8ea8")
-    (cons 200 "#ff79c6")
-    (cons 220 "#ff6da0")
-    (cons 240 "#ff617a")
-    (cons 260 "#ff5555")
-    (cons 280 "#d45558")
-    (cons 300 "#aa565a")
-    (cons 320 "#80565d")
-    (cons 340 "#6272a4")
-    (cons 360 "#6272a4")))
- '(vc-annotate-very-old-color nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(setq visible-bell t) ; Set up the visible bell
 
 ;; Line Numbers
 (column-number-mode)
 (global-display-line-numbers-mode t)
+
 ;; Disable line numbers for some modes
-(dolist (mode '(
-                org-mode-hook
-		        term-mode-hook
-		        shell-mode-hook
-                eshell-mode-hook
-                )
-	    )
-(add-hook mode (lambda () (display-line-numbers-mode 0))))
+(dolist (mode '(org-mode-hook
+                    term-mode-hook
+                    shell-mode-hook
+                eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
-;; Rainbow Delimiters
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+(set-face-attribute 'default nil :font "FiraCode Nerd Font" :height sb/default-font-size)
 
-;; Which Key
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.1)
-)
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font" :height sb/default-font-size)
 
-;; Ivy Rich
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height sb/default-font-size :weight 'regular)
 
-;; Counsel
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history)))
-
-;; Helpful
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+;; Make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; General (for easy keybindings)
 (use-package general
@@ -189,12 +64,8 @@
   (sb/leader-keys
    "t"  '(:ignore t :which-key "toggles")
    "tc" '(comment-line :which-key "toggle comment")
-   "s"  '(:ignore s :which-key "settings")
-   "st" '(counsel-load-theme :which-key "choose theme")
-   "ss" '(hydra-text-scale/body :which-key "scale text")
-  )
-)
-  
+   "s"  '(:ignore s :which-key "settings")))
+
 (general-define-key
  "C-M-j" 'counsel-switch-buffer
 )
@@ -211,10 +82,10 @@
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  ;; Use visual line motoins even outside of visual-line-mode buffers
+  ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-  
+
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal)
 )
@@ -224,6 +95,80 @@
   :config
   (evil-collection-init)
 )
+
+;; Easymotion
+(use-package evil-easymotion
+  :config
+  (evilem-default-keybindings "SPC"))
+
+;; ;; Dracula Doom Theme
+;; (use-package doom-themes
+;;   :init (load-theme 'doom-dracula t))
+
+;; Dracula Pro Theme
+(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
+(load-theme 'dracula-pro t)
+
+;; Icon Fonts
+(use-package all-the-icons)
+
+;; Doom Modeline
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height sb/modeline-height)))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 1))
+
+;; Ivy Autocompletion
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+;; Ivy Rich
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+;; Counsel
+(use-package counsel
+  :bind (("C-M-j" . 'counsel-switch-buffer)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history))
+  :config
+  (counsel-mode 1))
+
+(sb/leader-keys
+  "st" '(counsel-load-theme :which-key "choose theme"))
+
+;; Helpful
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 ;; Hydra
 (use-package hydra)
@@ -235,6 +180,200 @@
   ("f" nil "finished" :exit t)
 )
 
+(sb/leader-keys
+  "ss" '(hydra-text-scale/body :which-key "scale text"))
+
+(defun sb/org-font-setup ()
+  ;; Replace list hyphen with dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; Set faces for heading levels
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1)))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+(defun sb/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1))
+
+(use-package org
+  :hook (org-mode . sb/org-mode-setup)
+  :config
+  (setq org-ellipsis " ▾")
+
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+
+  (setq org-agenda-files
+        '("~/Projects/Code/emacs-from-scratch/OrgFiles/Tasks.org"
+          "~/Projects/Code/emacs-from-scratch/OrgFiles/Habits.org"
+          "~/Projects/Code/emacs-from-scratch/OrgFiles/Birthdays.org"))
+
+  (require 'org-habit)
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-graph-column 60)
+
+  (setq org-todo-keywords
+    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+
+  (setq org-refile-targets
+    '(("Archive.org" :maxlevel . 1)
+      ("Tasks.org" :maxlevel . 1)))
+
+  ;; Save Org buffers after refiling!
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
+  (setq org-tag-alist
+    '((:startgroup)
+       ; Put mutually exclusive tags here
+       (:endgroup)
+       ("@errand" . ?E)
+       ("@home" . ?H)
+       ("@work" . ?W)
+       ("agenda" . ?a)
+       ("planning" . ?p)
+       ("publish" . ?P)
+       ("batch" . ?b)
+       ("note" . ?n)
+       ("idea" . ?i)))
+
+  ;; Configure custom agenda views
+  (setq org-agenda-custom-commands
+   '(("d" "Dashboard"
+     ((agenda "" ((org-deadline-warning-days 7)))
+      (todo "NEXT"
+        ((org-agenda-overriding-header "Next Tasks")))
+      (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+    ("n" "Next Tasks"
+     ((todo "NEXT"
+        ((org-agenda-overriding-header "Next Tasks")))))
+
+    ("W" "Work Tasks" tags-todo "+work-email")
+
+    ;; Low-effort next actions
+    ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+     ((org-agenda-overriding-header "Low Effort Tasks")
+      (org-agenda-max-todos 20)
+      (org-agenda-files org-agenda-files)))
+
+    ("w" "Workflow Status"
+     ((todo "WAIT"
+            ((org-agenda-overriding-header "Waiting on External")
+             (org-agenda-files org-agenda-files)))
+      (todo "REVIEW"
+            ((org-agenda-overriding-header "In Review")
+             (org-agenda-files org-agenda-files)))
+      (todo "PLAN"
+            ((org-agenda-overriding-header "In Planning")
+             (org-agenda-todo-list-sublevels nil)
+             (org-agenda-files org-agenda-files)))
+      (todo "BACKLOG"
+            ((org-agenda-overriding-header "Project Backlog")
+             (org-agenda-todo-list-sublevels nil)
+             (org-agenda-files org-agenda-files)))
+      (todo "READY"
+            ((org-agenda-overriding-header "Ready for Work")
+             (org-agenda-files org-agenda-files)))
+      (todo "ACTIVE"
+            ((org-agenda-overriding-header "Active Projects")
+             (org-agenda-files org-agenda-files)))
+      (todo "COMPLETED"
+            ((org-agenda-overriding-header "Completed Projects")
+             (org-agenda-files org-agenda-files)))
+      (todo "CANC"
+            ((org-agenda-overriding-header "Cancelled Projects")
+             (org-agenda-files org-agenda-files)))))))
+
+  (setq org-capture-templates
+    `(("t" "Tasks / Projects")
+      ("tt" "Task" entry (file+olp "~/Projects/Code/emacs-from-scratch/OrgFiles/Tasks.org" "Inbox")
+           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+      ("j" "Journal Entries")
+      ("jj" "Journal" entry
+           (file+olp+datetree "~/Projects/Code/emacs-from-scratch/OrgFiles/Journal.org")
+           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+           :clock-in :clock-resume
+           :empty-lines 1)
+      ("jm" "Meeting" entry
+           (file+olp+datetree "~/Projects/Code/emacs-from-scratch/OrgFiles/Journal.org")
+           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+           :clock-in :clock-resume
+           :empty-lines 1)
+
+      ("w" "Workflows")
+      ("we" "Checking Email" entry (file+olp+datetree "~/Projects/Code/emacs-from-scratch/OrgFiles/Journal.org")
+           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+
+      ("m" "Metrics Capture")
+      ("mw" "Weight" table-line (file+headline "~/Projects/Code/emacs-from-scratch/OrgFiles/Metrics.org" "Weight")
+       "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+  (define-key global-map (kbd "C-c j")
+    (lambda () (interactive) (org-capture nil "jj")))
+
+  (sb/org-font-setup))
+
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+(defun sb/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+        visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :hook (org-mode . sb/org-mode-visual-fill))
+
+(org-babel-do-load-languages
+  'org-babel-load-languages
+  '((emacs-lisp . t)
+    (python . t)))
+
+(push '("conf-unix" . conf-unix) org-src-lang-modes)
+
+;; This is needed as of Org 9.2
+(require 'org-tempo)
+
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+;; Automatically tangle our Emacs.org config file when we save it
+(defun sb/org-babel-tangle-config ()
+  (when (string-equal (buffer-file-name)
+                      (expand-file-name "~/.config/emacs/README.org"))
+  ;; Dynamic scoping to the rescue
+  (let ((org-confirm-babel-evaluate nil))
+    (org-babel-tangle))))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'sb/org-babel-tangle-config)))
+
 ;; Projectile
 (use-package projectile
   :diminish projectile-mode
@@ -244,21 +383,16 @@
   ("C-c p" . projectile-command-map)
   :init
   (when (file-directory-p "~/Projects")
-    (setq projectile-project-search-path '("~/Projects/Personal" "~/Projects/UMICH"))
-  )
+    (setq projectile-project-search-path '("~/Projects/Personal" "~/Projects/UMICH")))
   (when (file-directory-p "~/.config")
-    (setq projectile-project-search-path '("~/.config"))
-  )
-  (setq projectile-switch-project-action #'projectile-dired)
-)
+    (setq projectile-project-search-path '("~/.config")))
+  (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
-  :config (counsel-projectile-mode)
-)
+  :config (counsel-projectile-mode))
 
 ;; Magit
 (use-package magit
-  ;; :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 )
@@ -268,54 +402,11 @@
 ;;   :after magit
 ;; )
 
-;; OPTIONAL: This will add GitHub integration to magit, but requires some token setup
+;; ;; NOTE: Make sure to configure a GitHub token before using this package!
+;; ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+;; ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
 ;; (use-package forge)
 
-(defun sb/org-mode-setup ()
-  (org-indent-mode)
-  ;; (variable-pitch-mode 1)
-  (auto-fill-mode 0)
-  (visual-line-mode 1)
-  (setq evil-auto-indent nil)
-)
-
-;; Replace list hyphen with dot
-  (font-lock-add-keywords 'org-mode
-                          '(("^ *\\([-]\\) "
-                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
-;; ;; Set faces for heading levels
-;;   (dolist (face '((org-level-1 . 1.2)
-;;                   (org-level-2 . 1.1)
-;;                   (org-level-3 . 1.05)
-;;                   (org-level-4 . 1.0)
-;;                   (org-level-5 . 1.1)
-;;                   (org-level-6 . 1.1)
-;;                   (org-level-7 . 1.1)
-;;                   (org-level-8 . 1.1)))
-;;     (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
-
-(use-package org
-  :hook (org-mode . sb/org-mode-setup)
-  :config
-  (setq org-ellipsis " ")
-  (sb/org-font-setup)
-)
-
-(use-package org-bullets
-  :after org
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
-)
-
-;; ;; Add visual fill (padding)
-;; (defun sb/org-mode-visual-fill ()
-;;   (setq visual-fill-column-width 100
-;;         visual-fill-column-center-text t)
-;;   (visual-fill-column-mode 1)
-;; )
-
-;; (use-package visual-fill-column
-;;   :hook (org-mode . sb/org-mode-visual-fill)
-;; )
+;; Rainbow Delimiters
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
