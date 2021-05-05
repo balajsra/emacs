@@ -1,0 +1,3 @@
+[submodule "packages/ligature.el"]
+	path = packages/ligature.el
+	url = git@github.com:mickeynp/ligature.el.git

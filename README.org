@@ -97,6 +97,36 @@ Setup FiraCode and Cantarell fonts with specified size.
   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height sb/default-font-size :weight 'regular)
 #+end_src
 
+** Ligature Support
+
+Add ligature support for Fira Code font.
+- https://github.com/tonsky/FiraCode/wiki/Emacs-instructions#using-ligatureel
+
+#+begin_src emacs-lisp
+  (use-package ligature
+    :load-path "./packages/ligature.el"
+    :config
+    ;; Enable the "www" ligature in every possible major mode
+    (ligature-set-ligatures 't '("www"))
+    ;; Enable traditional ligature support in eww-mode, if the
+    ;; `variable-pitch' face supports it
+    (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
+    ;; Enable ligatures in programming modes (Fira Code)
+    (ligature-set-ligatures 'prog-mode '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
+                                         ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
+                                         "-<" "-<<" "-~" "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
+                                         "#_(" ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*" "/**"
+                                         "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
+                                         "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
+                                         "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
+                                         "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
+                                         "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
+                                         "<~" "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>" "%%"))
+    ;; Enables ligature checks globally in all buffers. You can also do it
+    ;; per mode with `ligature-mode'.
+    (global-ligature-mode t))
+#+end_src
+
 * Keybindings
 
 ** General
@@ -478,6 +508,7 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("hs" . "src haskell"))
 #+end_src
 
 ** Auto-Tangle Configuration Files
@@ -506,6 +537,14 @@ Automatically tangle code blocks in file everytime it is saved.
 #+end_src
 
 ** Languages
+
+*** Language Modes
+
+**** Haskell
+
+#+begin_src emacs-lisp
+  (use-package haskell-mode)
+#+end_src
 
 *** Language Servers
 
