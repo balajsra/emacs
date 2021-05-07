@@ -1,6 +1,6 @@
-(defvar sb/default-font-size 115)
-(defvar sb/default-variable-font-size 115)
-(defvar sb/modeline-height 15)
+(defvar sb/default-font-size 110)
+(defvar sb/default-variable-font-size 110)
+(defvar sb/modeline-height 10)
 
 ;; Initialize package sources
 (require 'package)
@@ -388,15 +388,9 @@
 (add-to-list 'org-structure-template-alist '("py" . "src python"))
 (add-to-list 'org-structure-template-alist '("hs" . "src haskell"))
 
-;; Automatically tangle our Emacs.org config file when we save it
-(defun sb/org-babel-tangle-config ()
-  (when (string-equal (buffer-file-name)
-                      (expand-file-name "~/.config/emacs/README.org"))
-  ;; Dynamic scoping to the rescue
-  (let ((org-confirm-babel-evaluate nil))
-    (org-babel-tangle))))
-
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'sb/org-babel-tangle-config)))
+(use-package org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode))
 
 (use-package evil-nerd-commenter
   :bind ("M-/" . evilnc-comment-or-uncomment-lines))

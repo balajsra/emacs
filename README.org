@@ -1,10 +1,9 @@
 #+title: Personal Emacs Configuration
 #+author: Sravan Balaji
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el
+#+auto_tangle: t
 
-* Sravan Balaji's Emacs Configuration
-
-** Welcome
+* Welcome
 
   My personal configuration of Emacs, written as an [[https://orgmode.org][Org Mode]] document.
 
@@ -18,9 +17,9 @@
 ** Configuration Variables
 
 #+begin_src emacs-lisp
-  (defvar sb/default-font-size 115)
-  (defvar sb/default-variable-font-size 115)
-  (defvar sb/modeline-height 15)
+  (defvar sb/default-font-size 110)
+  (defvar sb/default-variable-font-size 110)
+  (defvar sb/modeline-height 10)
 #+end_src
 
 * Package System Setup
@@ -511,20 +510,15 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
   (add-to-list 'org-structure-template-alist '("hs" . "src haskell"))
 #+end_src
 
-** Auto-Tangle Configuration Files
+** Auto-Tangle
 
 Automatically tangle code blocks in file everytime it is saved.
+Add ~#+auto_tangle: t~ to the org document to enable this.
 
 #+begin_src emacs-lisp
-  ;; Automatically tangle our Emacs.org config file when we save it
-  (defun sb/org-babel-tangle-config ()
-    (when (string-equal (buffer-file-name)
-                        (expand-file-name "~/.config/emacs/README.org"))
-    ;; Dynamic scoping to the rescue
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
-
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'sb/org-babel-tangle-config)))
+  (use-package org-auto-tangle
+    :defer t
+    :hook (org-mode . org-auto-tangle-mode))
 #+end_src
 
 * Development
