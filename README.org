@@ -7,7 +7,7 @@
 
   My personal configuration of Emacs, written as an [[https://orgmode.org][Org Mode]] document.
 
-  Run the block below with `C-c C-c` to tangle code blocks to config file.
+  Run the block below with ~C-c C-c~ to tangle code blocks to config file.
 
 #+begin_src emacs-lisp :tangle no
   (org-mode-restart)
@@ -206,7 +206,7 @@ Add ligature support for Fira Code font.
 need to run the following command interactively so that mode line icons
 display correctly:
 
-`M-x all-the-icons-install-fonts`
+~M-x all-the-icons-install-fonts~
 
 #+begin_src emacs-lisp
   ;; Icon Fonts
@@ -596,6 +596,7 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 #+end_src
 
 ** Projectile
+
 #+begin_src emacs-lisp
   ;; Projectile
   (use-package projectile
@@ -605,11 +606,9 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
     :bind-keymap
     ("C-c p" . projectile-command-map)
     :init
-    (when (file-directory-p "~/Projects")
-      (setq projectile-project-search-path '("~/Projects/Personal" "~/Projects/UMICH")))
-    (when (file-directory-p "~/.config")
-      (setq projectile-project-search-path '("~/.config")))
+    (setq projectile-project-search-path '("~/Projects/" "~/.config/" "~/.xmonad/"))
     (setq projectile-switch-project-action #'projectile-dired))
+
 
   (use-package counsel-projectile
     :config (counsel-projectile-mode))

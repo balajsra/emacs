@@ -442,11 +442,9 @@
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :init
-  (when (file-directory-p "~/Projects")
-    (setq projectile-project-search-path '("~/Projects/Personal" "~/Projects/UMICH")))
-  (when (file-directory-p "~/.config")
-    (setq projectile-project-search-path '("~/.config")))
+  (setq projectile-project-search-path '("~/Projects/" "~/.config/" "~/.xmonad/"))
   (setq projectile-switch-project-action #'projectile-dired))
+
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
