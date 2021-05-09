@@ -46,7 +46,7 @@ Package sources and initialization.
   (setq use-package-always-ensure t)
 #+end_src
 
-* Basic UI Configuration
+ Basic UI Configuration
 
 ** Disable Unnecessary Visual Elements
 
@@ -534,10 +534,40 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 
 *** Language Modes
 
+**** Fish Shell
+
+#+begin_src emacs-lisp
+  (use-package fish-mode)
+#+end_src
+
+**** Git Attributes 
+
+#+begin_src emacs-lisp
+  (use-package gitattributes-mode)
+#+end_src
+
+**** Git Config 
+
+#+begin_src emacs-lisp
+  (use-package gitconfig-mode)
+#+end_src
+
+**** Git Ignore 
+
+#+begin_src emacs-lisp
+  (use-package gitignore-mode)
+#+end_src
+
 **** Haskell
 
 #+begin_src emacs-lisp
   (use-package haskell-mode)
+#+end_src
+
+**** Vimrc
+
+#+begin_src emacs-lisp
+  (use-package vimrc-mode)
 #+end_src
 
 *** Language Servers
@@ -565,16 +595,6 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 
   (use-package lsp-ivy)
 #+end_src
-
-# *** TypeScript
-
-# #+begin_src emacs-lisp
-#   (use-package typescript-mode
-#     :mode "\\.tx\\'"
-#     :hook (typescript-mode .lsp-deferred)
-#     :config
-#     (setq typescript-indent-level 2))
-# #+end_src
 
 *** Company Mode
 
@@ -622,16 +642,19 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
     :custom
     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   )
+#+end_src
 
-  ;; NOTE: evil-magit was removed from MELPA and now a part of evil-collection
-  ;; (use-package evil-magit
-  ;;   :after magit
-  ;; )
+*NOT IN USE*
+#+begin_src emacs-lisp :tangle no
+  NOTE: evil-magit was removed from MELPA and now a part of evil-collection
+  (use-package evil-magit
+    :after magit
+  )
 
-  ;; ;; NOTE: Make sure to configure a GitHub token before using this package!
-  ;; ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-  ;; ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-  ;; (use-package forge)
+  ;; NOTE: Make sure to configure a GitHub token before using this package!
+  ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
+  ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
+  (use-package forge)
 #+end_src
 
 ** Rainbow Delimeters

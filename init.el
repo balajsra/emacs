@@ -395,7 +395,17 @@
 (use-package evil-nerd-commenter
   :bind ("M-/" . evilnc-comment-or-uncomment-lines))
 
+(use-package fish-mode)
+
+(use-package gitattributes-mode)
+
+(use-package gitconfig-mode)
+
+(use-package gitignore-mode)
+
 (use-package haskell-mode)
+
+(use-package vimrc-mode)
 
 (defun sb/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -454,16 +464,6 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
 )
-
-;; NOTE: evil-magit was removed from MELPA and now a part of evil-collection
-;; (use-package evil-magit
-;;   :after magit
-;; )
-
-;; ;; NOTE: Make sure to configure a GitHub token before using this package!
-;; ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
-;; ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
-;; (use-package forge)
 
 ;; Rainbow Delimiters
 (use-package rainbow-delimiters
