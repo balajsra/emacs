@@ -313,6 +313,17 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     "ss" '(hydra-text-scale/body :which-key "scale text"))
 #+end_src
 
+** Highlight Indent Guides
+
+#+begin_src emacs-lisp :tangle init.el
+  (use-package highlight-indent-guides
+    :hook (prog-mode . highlight-indent-guides-mode)
+    :init
+    (setq highlight-indent-guides-method 'fill)
+    (setq highlight-indent-guides-responsive 'stack)
+    (setq highlight-indent-guides-delay 0))
+#+end_src
+
 * Org Mode
 
 ** Better Font Faces

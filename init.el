@@ -217,6 +217,13 @@
 (sb/leader-keys
   "ss" '(hydra-text-scale/body :which-key "scale text"))
 
+(use-package highlight-indent-guides
+  :hook (prog-mode . highlight-indent-guides-mode)
+  :init
+  (setq highlight-indent-guides-method 'fill)
+  (setq highlight-indent-guides-responsive 'stack)
+  (setq highlight-indent-guides-delay 0))
+
 (defun sb/org-font-setup ()
   ;; ;; Replace list hyphen with dot
   ;; (font-lock-add-keywords 'org-mode
