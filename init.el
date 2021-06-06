@@ -11,8 +11,8 @@
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org"   . "https://orgmode.org/elpa/")
-                         ("elpa"  . "https://elpa.gnu.org/packages/")))
+                         ("gnu-elpa"  . "https://elpa.gnu.org/packages/")
+                         ("nongnu-elpa"  . "https://elpa.nongnu.org/nongnu/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -24,6 +24,10 @@
 
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+(use-package auto-package-update
+  :init
+  (auto-package-update-maybe))
 
 (setq inhibit-startup-message t) ; Disable startup message
 
@@ -135,13 +139,13 @@
   :config
   (evilem-default-keybindings "SPC"))
 
-;; ;; Dracula Doom Theme
-;; (use-package doom-themes
-;;   :init (load-theme 'doom-dracula t))
+;; Dracula Doom Theme
+(use-package doom-themes
+  :init (load-theme 'doom-dracula t))
 
-;; Dracula Pro Theme
-(add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-(load-theme 'dracula-pro t)
+;; ;; Dracula Pro Theme
+;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
+;; (load-theme 'dracula-pro t)
 
 ;; Icon Fonts
 (use-package all-the-icons)
@@ -219,6 +223,7 @@
 
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
+  :hook (text-mode . highlight-indent-guides-mode)
   :init
   (setq highlight-indent-guides-method 'fill)
   (setq highlight-indent-guides-responsive 'stack)
@@ -434,6 +439,8 @@
 
 (use-package vimrc-mode)
 
+(use-package cc-mode)
+
 (defun sb/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
@@ -495,3 +502,16 @@
 ;; Rainbow Delimiters
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(doom-themes which-key vimrc-mode use-package rainbow-delimiters org-bullets org-auto-tangle magit lsp-ui lsp-treemacs lsp-ivy ivy-rich highlight-indent-guides helpful haskell-mode gitignore-mode gitconfig-mode gitattributes-mode general fish-mode evil-nerd-commenter evil-easymotion evil-collection doom-modeline counsel-projectile company-box auto-package-update)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

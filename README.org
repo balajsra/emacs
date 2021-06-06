@@ -29,15 +29,15 @@
 
 * Package System Setup
 
-Package sources and initialization.
+** Package Sources and Initialization.
 
 #+begin_src emacs-lisp :tangle init.el
   ;; Initialize package sources
   (require 'package)
 
   (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org"   . "https://orgmode.org/elpa/")
-                           ("elpa"  . "https://elpa.gnu.org/packages/")))
+                           ("gnu-elpa"  . "https://elpa.gnu.org/packages/")
+                           ("nongnu-elpa"  . "https://elpa.nongnu.org/nongnu/")))
 
   (package-initialize)
   (unless package-archive-contents
@@ -51,7 +51,15 @@ Package sources and initialization.
   (setq use-package-always-ensure t)
 #+end_src
 
- Basic UI Configuration
+** Auto Update Packages
+
+#+begin_src emacs-lisp :tangle init.el
+  (use-package auto-package-update
+    :init
+    (auto-package-update-maybe))
+#+end_src
+
+* Basic UI Configuration
 
 ** Disable Unnecessary Visual Elements
 
@@ -203,13 +211,13 @@ Add ligature support for Fira Code font.
 ** Color Theme
 
 #+begin_src emacs-lisp :tangle init.el
-  ;; ;; Dracula Doom Theme
-  ;; (use-package doom-themes
-  ;;   :init (load-theme 'doom-dracula t))
+  ;; Dracula Doom Theme
+  (use-package doom-themes
+    :init (load-theme 'doom-dracula t))
 
-  ;; Dracula Pro Theme
-  (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
-  (load-theme 'dracula-pro t)
+  ;; ;; Dracula Pro Theme
+  ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
+  ;; (load-theme 'dracula-pro t)
 #+end_src
 ** Better Modeline
 
@@ -318,6 +326,7 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
 #+begin_src emacs-lisp :tangle init.el
   (use-package highlight-indent-guides
     :hook (prog-mode . highlight-indent-guides-mode)
+    :hook (text-mode . highlight-indent-guides-mode)
     :init
     (setq highlight-indent-guides-method 'fill)
     (setq highlight-indent-guides-responsive 'stack)
@@ -608,6 +617,12 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 
 #+begin_src emacs-lisp :tangle init.el
   (use-package vimrc-mode)
+#+end_src
+
+**** C/C++
+
+#+begin_src emacs-lisp :tangle init.el
+  (use-package cc-mode)
 #+end_src
 
 *** Language Servers
