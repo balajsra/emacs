@@ -60,28 +60,9 @@
 ;; Set the variable pitch font
 (set-face-attribute 'variable-pitch nil :font sb/document-font :height sb/default-font-size :weight 'regular)
 
-(use-package ligature
-  :load-path "./packages/ligature.el"
-  :config
-  ;; Enable the "www" ligature in every possible major mode
-  (ligature-set-ligatures 't '("www"))
-  ;; Enable traditional ligature support in eww-mode, if the
-  ;; `variable-pitch' face supports it
-  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-  ;; Enable ligatures in programming modes (Fira Code)
-  (ligature-set-ligatures 'prog-mode '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
-                                       ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
-                                       "-<" "-<<" "-~" "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
-                                       "#_(" ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*" "/**"
-                                       "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
-                                       "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
-                                       "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
-                                       "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
-                                       "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
-                                       "<~" "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>" "%%"))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
+(use-package fira-code-mode
+  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x")) ;; List of ligatures to turn off
+  :hook prog-mode) ;; Enables fira-code-mode automatically for programming major modes
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -407,6 +388,7 @@
 (org-babel-do-load-languages
   'org-babel-load-languages
   '((emacs-lisp . t)
+    (makefile . t)
     (python . t)))
 
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
@@ -502,16 +484,3 @@
 ;; Rainbow Delimiters
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(doom-themes which-key vimrc-mode use-package rainbow-delimiters org-bullets org-auto-tangle magit lsp-ui lsp-treemacs lsp-ivy ivy-rich highlight-indent-guides helpful haskell-mode gitignore-mode gitconfig-mode gitattributes-mode general fish-mode evil-nerd-commenter evil-easymotion evil-collection doom-modeline counsel-projectile company-box auto-package-update)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

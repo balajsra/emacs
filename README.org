@@ -111,33 +111,16 @@ Setup FiraCode and Cantarell fonts with specified size.
 
 ** Ligature Support
 
-Add ligature support for Fira Code font.
+Add ligature support using Fira Code symbols.
 
-- https://github.com/tonsky/FiraCode/wiki/Emacs-instructions#using-ligatureel
+*NOTE*: The first time you load your configuration on a new machine, you'll need to run the following command interactively so that ligature symbols display correctly:
+
+~M-x fira-code-mode-install-fonts RET~
 
 #+begin_src emacs-lisp :tangle init.el
-  (use-package ligature
-    :load-path "./packages/ligature.el"
-    :config
-    ;; Enable the "www" ligature in every possible major mode
-    (ligature-set-ligatures 't '("www"))
-    ;; Enable traditional ligature support in eww-mode, if the
-    ;; `variable-pitch' face supports it
-    (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
-    ;; Enable ligatures in programming modes (Fira Code)
-    (ligature-set-ligatures 'prog-mode '("www" "**" "***" "**/" "*>" "*/" "\\\\" "\\\\\\" "{-" "::"
-                                         ":::" ":=" "!!" "!=" "!==" "-}" "----" "-->" "->" "->>"
-                                         "-<" "-<<" "-~" "#{" "#[" "##" "###" "####" "#(" "#?" "#_"
-                                         "#_(" ".-" ".=" ".." "..<" "..." "?=" "??" ";;" "/*" "/**"
-                                         "/=" "/==" "/>" "//" "///" "&&" "||" "||=" "|=" "|>" "^=" "$>"
-                                         "++" "+++" "+>" "=:=" "==" "===" "==>" "=>" "=>>" "<="
-                                         "=<<" "=/=" ">-" ">=" ">=>" ">>" ">>-" ">>=" ">>>" "<*"
-                                         "<*>" "<|" "<|>" "<$" "<$>" "<!--" "<-" "<--" "<->" "<+"
-                                         "<+>" "<=" "<==" "<=>" "<=<" "<>" "<<" "<<-" "<<=" "<<<"
-                                         "<~" "<~~" "</" "</>" "~@" "~-" "~>" "~~" "~~>" "%%"))
-    ;; Enables ligature checks globally in all buffers. You can also do it
-    ;; per mode with `ligature-mode'.
-    (global-ligature-mode t))
+  (use-package fira-code-mode
+    :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x")) ;; List of ligatures to turn off
+    :hook prog-mode) ;; Enables fira-code-mode automatically for programming major modes
 #+end_src
 
 * Keybindings
@@ -221,11 +204,9 @@ Add ligature support for Fira Code font.
 #+end_src
 ** Better Modeline
 
-*NOTE*: The first time you load your configuration on a new machine, you'll
-need to run the following command interactively so that mode line icons
-display correctly:
+*NOTE*: The first time you load your configuration on a new machine, you'll need to run the following command interactively so that mode line icons display correctly:
 
-~M-x all-the-icons-install-fonts~
+~M-x all-the-icons-install-fonts RET~
 
 #+begin_src emacs-lisp :tangle init.el
   ;; Icon Fonts
@@ -541,6 +522,7 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
   (org-babel-do-load-languages
     'org-babel-load-languages
     '((emacs-lisp . t)
+      (makefile . t)
       (python . t)))
 
   (push '("conf-unix" . conf-unix) org-src-lang-modes)
