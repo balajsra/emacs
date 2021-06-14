@@ -10,24 +10,30 @@
 ;; Initialize package sources
 (require 'package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+(setq package-archives '(
+                         ("melpa" . "https://melpa.org/packages/")
                          ("gnu-elpa"  . "https://elpa.gnu.org/packages/")
-                         ("nongnu-elpa"  . "https://elpa.nongnu.org/nongnu/")))
+                         ("nongnu-elpa"  . "https://elpa.nongnu.org/nongnu/")
+                        )
+)
 
 (package-initialize)
 (unless package-archive-contents
-  (package-refresh-contents))
+  (package-refresh-contents)
+)
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-  (package-install 'use-package))
+  (package-install 'use-package)
+)
 
 (require 'use-package)
 (setq use-package-always-ensure t)
 
 (use-package auto-package-update
   :init
-  (auto-package-update-maybe))
+  (auto-package-update-maybe)
+)
 
 (setq inhibit-startup-message t) ; Disable startup message
 
@@ -45,11 +51,15 @@
 (global-display-line-numbers-mode t)
 
 ;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                    term-mode-hook
-                    shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+(dolist (mode '(
+                org-mode-hook
+                term-mode-hook
+                shell-mode-hook
+                eshell-mode-hook
+                )
+        )
+  (add-hook mode (lambda () (display-line-numbers-mode 0)))
+)
 
 ;; Set the default font
 (set-face-attribute 'default nil :font sb/source-code-font :height sb/default-font-size)
@@ -61,8 +71,23 @@
 (set-face-attribute 'variable-pitch nil :font sb/document-font :height sb/default-font-size :weight 'regular)
 
 (use-package fira-code-mode
-  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x")) ;; List of ligatures to turn off
-  :hook prog-mode) ;; Enables fira-code-mode automatically for programming major modes
+  :custom
+  ;; List of ligatures to turn off
+  (fira-code-mode-disabled-ligatures '(
+                                       "[]" "#{" "#(" "#_" "#_(" "x"
+                                       )
+  ) 
+  ;; Enables fira-code-mode automatically for programming major modes
+  :hook prog-mode
+)
+
+(setq-default tab-width 4)
+
+(defun reload-config ()
+  (interactive)
+  (load-file user-init-file)
+  (revert-buffer t t)
+)
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -73,16 +98,20 @@
   (general-create-definer sb/leader-keys
     :keymaps '(normal insert visual emacs)
     :prefix "SPC"
-    :global-prefix "C-SPC")
+    :global-prefix "C-SPC"
+  )
 
   (sb/leader-keys
-   "o"  '(:ignore t :which-key "org-mode quick access")
-   "oa" '(org-agenda :which-key "org agenda")
-   "oc" '(org-capture :which-key "org capture")
-   ;; "t"  '(:ignore t :which-key "toggles")
-   ;; "tc" '(comment-line :which-key "toggle comment")
-   "s"  '(:ignore s :which-key "settings")
-   )
+    "o"  '(:ignore t :which-key "org-mode quick access")
+    "oa" '(org-agenda :which-key "org agenda")
+    "oc" '(org-capture :which-key "org capture")
+    ;; "t"  '(:ignore t :which-key "toggles")
+    ;; "tc" '(comment-line :which-key "toggle comment")
+    "s"  '(:ignore s :which-key "settings")
+    "sr" '(reload-config :which-key "reload config")
+    "ss" '(hydra-text-scale/body :which-key "scale text")
+    "st" '(counsel-load-theme :which-key "choose theme")
+  )
 )
 
 (general-define-key
@@ -118,35 +147,61 @@
 ;; Easymotion
 (use-package evil-easymotion
   :config
-  (evilem-default-keybindings "SPC"))
+  (evilem-default-keybindings "SPC")
+)
 
 ;; Dracula Doom Theme
 (use-package doom-themes
-  :init (load-theme 'doom-dracula t))
+  :init (load-theme 'doom-dracula t)
+)
 
 ;; ;; Dracula Pro Theme
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
 ;; (load-theme 'dracula-pro t)
 
-;; Icon Fonts
-(use-package all-the-icons)
-
 ;; Doom Modeline
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height sb/modeline-height)))
+  :custom ((doom-modeline-height sb/modeline-height))
+)
+
+;; Emacs Dashboard
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook)
+  :init
+  ;; Banner Title
+  (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+  ;; Banner Logo
+  (setq dashboard-startup-banner 'logo)
+  ;; Widgets
+  (setq dashboard-items '((recents . 5)
+                          (bookmarks . 5)
+                          (projects . 5)
+                          (registers . 5)))
+  ;; Show Heading & File Icons
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  ;; Show info about packages loaded and init time
+  (setq dashboard-set-init-info t)
+  ;; Use with counsel-projectile
+  (setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+)
 
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 1))
+  (setq which-key-idle-delay 1)
+)
 
 ;; Ivy Autocompletion
 (use-package ivy
   :diminish
-  :bind (("C-s" . swiper)
+  :bind (
+         ("C-s" . swiper)
          :map ivy-minibuffer-map
          ("TAB" . ivy-alt-done)
          ("C-l" . ivy-alt-done)
@@ -158,14 +213,24 @@
          ("C-d" . ivy-switch-buffer-kill)
          :map ivy-reverse-i-search-map
          ("C-k" . ivy-previous-line)
-         ("C-d" . ivy-reverse-i-search-kill))
+         ("C-d" . ivy-reverse-i-search-kill)
+        )
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+)
+
+;; All the Icons Ivy Rich
+(use-package all-the-icons-ivy-rich
+  :ensure t
+  :after counsel-projectile
+  :init (all-the-icons-ivy-rich-mode 1)
+)
 
 ;; Ivy Rich
 (use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
+  :ensure t
+  :init (ivy-rich-mode 1)
+)
 
 ;; Counsel
 (use-package counsel
@@ -173,10 +238,8 @@
          :map minibuffer-local-map
          ("C-r" . 'counsel-minibuffer-history))
   :config
-  (counsel-mode 1))
-
-(sb/leader-keys
-  "st" '(counsel-load-theme :which-key "choose theme"))
+  (counsel-mode 1)
+)
 
 ;; Helpful
 (use-package helpful
@@ -187,7 +250,8 @@
   ([remap describe-function] . counsel-describe-function)
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+  ([remap describe-key] . helpful-key)
+)
 
 ;; Hydra
 (use-package hydra)
@@ -199,16 +263,14 @@
   ("f" nil "finished" :exit t)
 )
 
-(sb/leader-keys
-  "ss" '(hydra-text-scale/body :which-key "scale text"))
-
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
   :hook (text-mode . highlight-indent-guides-mode)
   :init
   (setq highlight-indent-guides-method 'fill)
   (setq highlight-indent-guides-responsive 'stack)
-  (setq highlight-indent-guides-delay 0))
+  (setq highlight-indent-guides-delay 0)
+)
 
 (defun sb/org-font-setup ()
   ;; ;; Replace list hyphen with dot
@@ -225,7 +287,8 @@
                   (org-level-6 . 1.1)
                   (org-level-7 . 1.1)
                   (org-level-8 . 1.1)))
-    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+    (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))
+  )
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -234,14 +297,16 @@
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+)
 
 (defun sb/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (auto-fill-mode 0)
   (visual-line-mode 1)
-  (setq evil-auto-indent nil))
+  (setq evil-auto-indent nil)
+)
 
 (use-package org
   :hook (org-mode . sb/org-mode-setup)
@@ -270,8 +335,11 @@
 
   ;; Org TODO Keywords
   (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+        '(
+          (sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")
+         )
+  )
 
   ;; ;; Move tasks between documents
   ;; (setq org-refile-targets
@@ -342,7 +410,8 @@
              (org-agenda-files org-agenda-files)))
       (todo "CANC"
             ((org-agenda-overriding-header "Cancelled Projects")
-             (org-agenda-files org-agenda-files)))))))
+             (org-agenda-files org-agenda-files))))))
+  )
 
   ;; Org Capture Templates
   (setq org-capture-templates
@@ -377,19 +446,22 @@
   ;; (define-key global-map (kbd "C-c j")
   ;;   (lambda () (interactive) (org-capture nil "jj")))
 
-  (sb/org-font-setup))
+  (sb/org-font-setup)
+)
 
 (use-package org-bullets
   :after org
   :hook (org-mode . org-bullets-mode)
   :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+)
 
 (org-babel-do-load-languages
   'org-babel-load-languages
   '((emacs-lisp . t)
     (makefile . t)
-    (python . t)))
+    (python . t))
+)
 
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
 
@@ -404,10 +476,12 @@
 
 (use-package org-auto-tangle
   :defer t
-  :hook (org-mode . org-auto-tangle-mode))
+  :hook (org-mode . org-auto-tangle-mode)
+)
 
 (use-package evil-nerd-commenter
-  :bind ("M-/" . evilnc-comment-or-uncomment-lines))
+  :bind ("M-/" . evilnc-comment-or-uncomment-lines)
+)
 
 (use-package fish-mode)
 
@@ -425,7 +499,8 @@
 
 (defun sb/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
+  (lsp-headerline-breadcrumb-mode)
+)
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
@@ -433,15 +508,18 @@
   :init
   (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
   :config
-  (lsp-enable-which-key-integration t))
+  (lsp-enable-which-key-integration t)
+)
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :custom
-  (lsp-ui-doc-position 'bottom))
+  (lsp-ui-doc-position 'bottom)
+)
 
 (use-package lsp-treemacs
-  :after lsp)
+  :after lsp
+)
 
 (use-package lsp-ivy)
 
@@ -455,10 +533,12 @@
         ("<tab>" . company-indent-or-complete-common))
   :custom
   (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
+  (company-idle-delay 0.0)
+)
 
 (use-package company-box
-  :hook (company-mode . company-box-mode))
+  :hook (company-mode . company-box-mode)
+)
 
 ;; Projectile
 (use-package projectile
@@ -469,11 +549,12 @@
   ("C-c p" . projectile-command-map)
   :init
   (setq projectile-project-search-path '("~/Projects/" "~/.config/" "~/.xmonad/"))
-  (setq projectile-switch-project-action #'projectile-dired))
-
+  (setq projectile-switch-project-action #'projectile-dired)
+)
 
 (use-package counsel-projectile
-  :config (counsel-projectile-mode))
+  :config (counsel-projectile-mode)
+)
 
 ;; Magit
 (use-package magit
@@ -483,4 +564,5 @@
 
 ;; Rainbow Delimiters
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode)
+)

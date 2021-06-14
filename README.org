@@ -1,14 +1,15 @@
 #+title: Personal Emacs Configuration
 #+author: Sravan Balaji
 #+auto_tangle: t
+#+startup: showeverything
 
 * Welcome
 
-  My personal configuration of Emacs, written as an [[https://orgmode.org][Org Mode]] document.
+My personal configuration of Emacs, written as an [[https://orgmode.org][Org Mode]] document.
 
-  Run the block below with ~C-c C-c~ to tangle code blocks to config file.
+Run the block below with =C-c C-c= to tangle code blocks to config file.
 
-  *NOT IN USE*
+*NOT IN USE*
 #+begin_src emacs-lisp :tangle no
   (org-mode-restart)
   (org-babel-tangle)
@@ -29,23 +30,28 @@
 
 * Package System Setup
 
-** Package Sources and Initialization.
+** Package Sources and Initialization
 
 #+begin_src emacs-lisp :tangle init.el
   ;; Initialize package sources
   (require 'package)
 
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+  (setq package-archives '(
+                           ("melpa" . "https://melpa.org/packages/")
                            ("gnu-elpa"  . "https://elpa.gnu.org/packages/")
-                           ("nongnu-elpa"  . "https://elpa.nongnu.org/nongnu/")))
+                           ("nongnu-elpa"  . "https://elpa.nongnu.org/nongnu/")
+                          )
+  )
 
   (package-initialize)
   (unless package-archive-contents
-    (package-refresh-contents))
+    (package-refresh-contents)
+  )
 
   ;; Initialize use-package on non-Linux platforms
   (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
+    (package-install 'use-package)
+  )
 
   (require 'use-package)
   (setq use-package-always-ensure t)
@@ -56,7 +62,8 @@
 #+begin_src emacs-lisp :tangle init.el
   (use-package auto-package-update
     :init
-    (auto-package-update-maybe))
+    (auto-package-update-maybe)
+  )
 #+end_src
 
 * Basic UI Configuration
@@ -87,11 +94,15 @@ Turn on the visual bell and add some breathing room.
   (global-display-line-numbers-mode t)
 
   ;; Disable line numbers for some modes
-  (dolist (mode '(org-mode-hook
-                      term-mode-hook
-                      shell-mode-hook
-                  eshell-mode-hook))
-    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (dolist (mode '(
+                  org-mode-hook
+                  term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook
+                  )
+          )
+    (add-hook mode (lambda () (display-line-numbers-mode 0)))
+  )
 #+end_src
 
 ** Font Configuration
@@ -115,15 +126,38 @@ Add ligature support using Fira Code symbols.
 
 *NOTE*: The first time you load your configuration on a new machine, you'll need to run the following command interactively so that ligature symbols display correctly:
 
-~M-x fira-code-mode-install-fonts RET~
+=M-x fira-code-mode-install-fonts RET=
 
 #+begin_src emacs-lisp :tangle init.el
   (use-package fira-code-mode
-    :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x")) ;; List of ligatures to turn off
-    :hook prog-mode) ;; Enables fira-code-mode automatically for programming major modes
+    :custom
+    ;; List of ligatures to turn off
+    (fira-code-mode-disabled-ligatures '(
+                                         "[]" "#{" "#(" "#_" "#_(" "x"
+                                         )
+    ) 
+    ;; Enables fira-code-mode automatically for programming major modes
+    :hook prog-mode
+  )
+#+end_src
+
+** Tab Width
+
+#+begin_src emacs-lisp :tangle init.el
+  (setq-default tab-width 4)
 #+end_src
 
 * Keybindings
+
+** Custom Functions
+
+#+begin_src emacs-lisp :tangle init.el
+  (defun reload-config ()
+    (interactive)
+    (load-file user-init-file)
+    (revert-buffer t t)
+  )
+#+end_src
 
 ** General
 
@@ -137,16 +171,20 @@ Add ligature support using Fira Code symbols.
     (general-create-definer sb/leader-keys
       :keymaps '(normal insert visual emacs)
       :prefix "SPC"
-      :global-prefix "C-SPC")
+      :global-prefix "C-SPC"
+    )
 
     (sb/leader-keys
-     "o"  '(:ignore t :which-key "org-mode quick access")
-     "oa" '(org-agenda :which-key "org agenda")
-     "oc" '(org-capture :which-key "org capture")
-     ;; "t"  '(:ignore t :which-key "toggles")
-     ;; "tc" '(comment-line :which-key "toggle comment")
-     "s"  '(:ignore s :which-key "settings")
-     )
+      "o"  '(:ignore t :which-key "org-mode quick access")
+      "oa" '(org-agenda :which-key "org agenda")
+      "oc" '(org-capture :which-key "org capture")
+      ;; "t"  '(:ignore t :which-key "toggles")
+      ;; "tc" '(comment-line :which-key "toggle comment")
+      "s"  '(:ignore s :which-key "settings")
+      "sr" '(reload-config :which-key "reload config")
+      "ss" '(hydra-text-scale/body :which-key "scale text")
+      "st" '(counsel-load-theme :which-key "choose theme")
+    )
   )
 
   (general-define-key
@@ -186,7 +224,8 @@ Add ligature support using Fira Code symbols.
   ;; Easymotion
   (use-package evil-easymotion
     :config
-    (evilem-default-keybindings "SPC"))
+    (evilem-default-keybindings "SPC")
+  )
 #+end_src
 
 * UI Configuration
@@ -196,7 +235,8 @@ Add ligature support using Fira Code symbols.
 #+begin_src emacs-lisp :tangle init.el
   ;; Dracula Doom Theme
   (use-package doom-themes
-    :init (load-theme 'doom-dracula t))
+    :init (load-theme 'doom-dracula t)
+  )
 
   ;; ;; Dracula Pro Theme
   ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
@@ -204,19 +244,41 @@ Add ligature support using Fira Code symbols.
 #+end_src
 ** Better Modeline
 
-*NOTE*: The first time you load your configuration on a new machine, you'll need to run the following command interactively so that mode line icons display correctly:
-
-~M-x all-the-icons-install-fonts RET~
-
 #+begin_src emacs-lisp :tangle init.el
-  ;; Icon Fonts
-  (use-package all-the-icons)
-
   ;; Doom Modeline
   (use-package doom-modeline
     :ensure t
     :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height sb/modeline-height)))
+    :custom ((doom-modeline-height sb/modeline-height))
+  )
+#+end_src
+
+** Dashboard
+
+#+begin_src emacs-lisp :tangle init.el
+  ;; Emacs Dashboard
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    :init
+    ;; Banner Title
+    (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+    ;; Banner Logo
+    (setq dashboard-startup-banner 'logo)
+    ;; Widgets
+    (setq dashboard-items '((recents . 5)
+                            (bookmarks . 5)
+                            (projects . 5)
+                            (registers . 5)))
+    ;; Show Heading & File Icons
+    (setq dashboard-set-heading-icons t)
+    (setq dashboard-set-file-icons t)
+    ;; Show info about packages loaded and init time
+    (setq dashboard-set-init-info t)
+    ;; Use with counsel-projectile
+    (setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+  )
 #+end_src
 
 ** Which Key
@@ -226,16 +288,22 @@ Add ligature support using Fira Code symbols.
     :init (which-key-mode)
     :diminish which-key-mode
     :config
-    (setq which-key-idle-delay 1))
+    (setq which-key-idle-delay 1)
+  )
 #+end_src
 
 ** Ivy and Counsel
+
+*NOTE*: The first time you load your configuration on a new machine, you may need to run the following command interactively so that mode line icons display correctly:
+
+=M-x all-the-icons-install-fonts RET=
 
 #+begin_src emacs-lisp :tangle init.el
   ;; Ivy Autocompletion
   (use-package ivy
     :diminish
-    :bind (("C-s" . swiper)
+    :bind (
+           ("C-s" . swiper)
            :map ivy-minibuffer-map
            ("TAB" . ivy-alt-done)
            ("C-l" . ivy-alt-done)
@@ -247,14 +315,24 @@ Add ligature support using Fira Code symbols.
            ("C-d" . ivy-switch-buffer-kill)
            :map ivy-reverse-i-search-map
            ("C-k" . ivy-previous-line)
-           ("C-d" . ivy-reverse-i-search-kill))
+           ("C-d" . ivy-reverse-i-search-kill)
+          )
     :config
-    (ivy-mode 1))
+    (ivy-mode 1)
+  )
+
+  ;; All the Icons Ivy Rich
+  (use-package all-the-icons-ivy-rich
+    :ensure t
+    :after counsel-projectile
+    :init (all-the-icons-ivy-rich-mode 1)
+  )
 
   ;; Ivy Rich
   (use-package ivy-rich
-    :init
-    (ivy-rich-mode 1))
+    :ensure t
+    :init (ivy-rich-mode 1)
+  )
 
   ;; Counsel
   (use-package counsel
@@ -262,10 +340,8 @@ Add ligature support using Fira Code symbols.
            :map minibuffer-local-map
            ("C-r" . 'counsel-minibuffer-history))
     :config
-    (counsel-mode 1))
-
-  (sb/leader-keys
-    "st" '(counsel-load-theme :which-key "choose theme"))
+    (counsel-mode 1)
+  )
 #+end_src
 
 ** Helpful Help Commands
@@ -280,7 +356,8 @@ Add ligature support using Fira Code symbols.
     ([remap describe-function] . counsel-describe-function)
     ([remap describe-command] . helpful-command)
     ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key] . helpful-key))
+    ([remap describe-key] . helpful-key)
+  )
 #+end_src
 
 ** Text Scaling
@@ -297,9 +374,6 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     ("k" text-scale-decrease "out")
     ("f" nil "finished" :exit t)
   )
-
-  (sb/leader-keys
-    "ss" '(hydra-text-scale/body :which-key "scale text"))
 #+end_src
 
 ** Highlight Indent Guides
@@ -311,7 +385,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     :init
     (setq highlight-indent-guides-method 'fill)
     (setq highlight-indent-guides-responsive 'stack)
-    (setq highlight-indent-guides-delay 0))
+    (setq highlight-indent-guides-delay 0)
+  )
 #+end_src
 
 * Org Mode
@@ -334,7 +409,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
                     (org-level-6 . 1.1)
                     (org-level-7 . 1.1)
                     (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face)))
+      (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))
+    )
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
     (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -343,7 +419,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
     (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
     (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+  )
 #+end_src
 
 ** Main Config
@@ -354,7 +431,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     (variable-pitch-mode 1)
     (auto-fill-mode 0)
     (visual-line-mode 1)
-    (setq evil-auto-indent nil))
+    (setq evil-auto-indent nil)
+  )
 
   (use-package org
     :hook (org-mode . sb/org-mode-setup)
@@ -383,8 +461,11 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
 
     ;; Org TODO Keywords
     (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-        (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+          '(
+            (sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+            (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")
+           )
+    )
 
     ;; ;; Move tasks between documents
     ;; (setq org-refile-targets
@@ -455,7 +536,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
                (org-agenda-files org-agenda-files)))
         (todo "CANC"
               ((org-agenda-overriding-header "Cancelled Projects")
-               (org-agenda-files org-agenda-files)))))))
+               (org-agenda-files org-agenda-files))))))
+    )
 
     ;; Org Capture Templates
     (setq org-capture-templates
@@ -490,7 +572,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     ;; (define-key global-map (kbd "C-c j")
     ;;   (lambda () (interactive) (org-capture nil "jj")))
 
-    (sb/org-font-setup))
+    (sb/org-font-setup)
+  )
 #+end_src
 
 ** Heading Bullets
@@ -500,7 +583,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     :after org
     :hook (org-mode . org-bullets-mode)
     :custom
-    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+  )
 #+end_src
 
 ** Center Org Buffers
@@ -510,10 +594,12 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
   (defun sb/org-mode-visual-fill ()
     (setq visual-fill-column-width 100
           visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
+    (visual-fill-column-mode 1)
+  )
 
   (use-package visual-fill-column
-    :hook (org-mode . sb/org-mode-visual-fill))
+    :hook (org-mode . sb/org-mode-visual-fill)
+  )
 #+end_src
 
 ** Configure Babel Languages
@@ -523,7 +609,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     'org-babel-load-languages
     '((emacs-lisp . t)
       (makefile . t)
-      (python . t)))
+      (python . t))
+  )
 
   (push '("conf-unix" . conf-unix) org-src-lang-modes)
 #+end_src
@@ -544,12 +631,13 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
 ** Auto-Tangle
 
 Automatically tangle code blocks in file everytime it is saved.
-Add ~#+auto_tangle: t~ to the org document to enable this.
+Add =#+auto_tangle: t= to the org document to enable this.
 
 #+begin_src emacs-lisp :tangle init.el
   (use-package org-auto-tangle
     :defer t
-    :hook (org-mode . org-auto-tangle-mode))
+    :hook (org-mode . org-auto-tangle-mode)
+  )
 #+end_src
 
 * Development
@@ -558,7 +646,8 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 
 #+begin_src emacs-lisp :tangle init.el
   (use-package evil-nerd-commenter
-    :bind ("M-/" . evilnc-comment-or-uncomment-lines))
+    :bind ("M-/" . evilnc-comment-or-uncomment-lines)
+  )
 #+end_src
 
 ** Languages
@@ -601,7 +690,7 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
   (use-package vimrc-mode)
 #+end_src
 
-**** C/C++
+**** C / C++
 
 #+begin_src emacs-lisp :tangle init.el
   (use-package cc-mode)
@@ -612,7 +701,8 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 #+begin_src emacs-lisp :tangle init.el
   (defun sb/lsp-mode-setup ()
     (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
+    (lsp-headerline-breadcrumb-mode)
+  )
 
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
@@ -620,15 +710,18 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
     :init
     (setq lsp-keymap-prefix "C-c l") ;; Or 'C-l', 's-l'
     :config
-    (lsp-enable-which-key-integration t))
+    (lsp-enable-which-key-integration t)
+  )
 
   (use-package lsp-ui
     :hook (lsp-mode . lsp-ui-mode)
     :custom
-    (lsp-ui-doc-position 'bottom))
+    (lsp-ui-doc-position 'bottom)
+  )
 
   (use-package lsp-treemacs
-    :after lsp)
+    :after lsp
+  )
 
   (use-package lsp-ivy)
 #+end_src
@@ -646,10 +739,12 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
           ("<tab>" . company-indent-or-complete-common))
     :custom
     (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
+    (company-idle-delay 0.0)
+  )
 
   (use-package company-box
-    :hook (company-mode . company-box-mode))
+    :hook (company-mode . company-box-mode)
+  )
 #+end_src
 
 ** Projectile
@@ -664,11 +759,12 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
     ("C-c p" . projectile-command-map)
     :init
     (setq projectile-project-search-path '("~/Projects/" "~/.config/" "~/.xmonad/"))
-    (setq projectile-switch-project-action #'projectile-dired))
-
+    (setq projectile-switch-project-action #'projectile-dired)
+  )
 
   (use-package counsel-projectile
-    :config (counsel-projectile-mode))
+    :config (counsel-projectile-mode)
+  )
 #+end_src
 
 ** Magit
@@ -682,8 +778,10 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 #+end_src
 
 *NOT IN USE*
+
+*NOTE*: evil-magit was removed from MELPA and now a part of evil-collection
+
 #+begin_src emacs-lisp :tangle no
-  NOTE: evil-magit was removed from MELPA and now a part of evil-collection
   (use-package evil-magit
     :after magit
   )
@@ -699,6 +797,7 @@ Add ~#+auto_tangle: t~ to the org document to enable this.
 #+begin_src emacs-lisp :tangle init.el
   ;; Rainbow Delimiters
   (use-package rainbow-delimiters
-    :hook (prog-mode . rainbow-delimiters-mode))
+    :hook (prog-mode . rainbow-delimiters-mode)
+  )
 #+end_src
 
