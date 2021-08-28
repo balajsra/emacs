@@ -454,6 +454,8 @@
   :hook (org-mode . org-bullets-mode)
   :custom
   (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+  :init
+  (setq inhibit-compacting-font-caches t)
 )
 
 (org-babel-do-load-languages

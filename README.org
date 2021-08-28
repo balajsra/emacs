@@ -584,6 +584,8 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     :hook (org-mode . org-bullets-mode)
     :custom
     (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+    :init
+    (setq inhibit-compacting-font-caches t)
   )
 #+end_src
 
