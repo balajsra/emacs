@@ -306,6 +306,7 @@
   (auto-fill-mode 0)
   (visual-line-mode 1)
   (setq evil-auto-indent nil)
+  (setq org-edit-src-content-indentation 0)
 )
 
 (use-package org
