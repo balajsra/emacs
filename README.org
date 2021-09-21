@@ -1,7 +1,50 @@
-#+title: Personal Emacs Configuration
-#+author: Sravan Balaji
-#+auto_tangle: t
-#+startup: showeverything
+#+TITLE: Personal Emacs Configuration
+#+AUTHOR: Sravan Balaji
+#+AUTO_TANGLE: t
+#+STARTUP: showeverything
+
+* Table of Contents :TOC_3:noexport:
+- [[#welcome][Welcome]]
+  - [[#configuration-variables][Configuration Variables]]
+- [[#package-system-setup][Package System Setup]]
+  - [[#package-sources-and-initialization][Package Sources and Initialization]]
+  - [[#auto-update-packages][Auto Update Packages]]
+- [[#basic-ui-configuration][Basic UI Configuration]]
+  - [[#disable-unnecessary-visual-elements][Disable Unnecessary Visual Elements]]
+  - [[#line-numbers][Line Numbers]]
+  - [[#font-configuration][Font Configuration]]
+  - [[#ligature-support][Ligature Support]]
+  - [[#tab-width][Tab Width]]
+- [[#keybindings][Keybindings]]
+  - [[#custom-functions][Custom Functions]]
+  - [[#general][General]]
+  - [[#evil-keybindings][Evil Keybindings]]
+- [[#ui-configuration][UI Configuration]]
+  - [[#color-theme][Color Theme]]
+  - [[#better-modeline][Better Modeline]]
+  - [[#dashboard][Dashboard]]
+  - [[#which-key][Which Key]]
+  - [[#ivy-and-counsel][Ivy and Counsel]]
+  - [[#helpful-help-commands][Helpful Help Commands]]
+  - [[#text-scaling][Text Scaling]]
+  - [[#highlight-indent-guides][Highlight Indent Guides]]
+- [[#org-mode][Org Mode]]
+  - [[#better-font-faces][Better Font Faces]]
+  - [[#main-config][Main Config]]
+  - [[#heading-bullets][Heading Bullets]]
+  - [[#center-org-buffers][Center Org Buffers]]
+  - [[#configure-babel-languages][Configure Babel Languages]]
+  - [[#structure-templates][Structure Templates]]
+  - [[#auto-tangle][Auto-Tangle]]
+- [[#development][Development]]
+  - [[#commenting][Commenting]]
+  - [[#languages][Languages]]
+    - [[#language-modes][Language Modes]]
+    - [[#language-servers][Language Servers]]
+    - [[#company-mode][Company Mode]]
+  - [[#projectile][Projectile]]
+  - [[#magit][Magit]]
+  - [[#rainbow-delimeters][Rainbow Delimeters]]
 
 * Welcome
 
@@ -10,14 +53,14 @@ My personal configuration of Emacs, written as an [[https://orgmode.org][Org Mod
 Run the block below with =C-c C-c= to tangle code blocks to config file.
 
 *NOT IN USE*
-#+begin_src emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle no
 (org-mode-restart)
 (org-babel-tangle)
-#+end_src
+#+END_SRC
 
 ** Configuration Variables
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Font Sizes
 (defvar sb/default-font-size 110)
 (defvar sb/default-variable-font-size 110)
@@ -26,13 +69,13 @@ Run the block below with =C-c C-c= to tangle code blocks to config file.
 ;; Font Names
 (defvar sb/source-code-font "FiraCode Nerd Font")
 (defvar sb/document-font "Cantarell")
-#+end_src
+#+END_SRC
 
 * Package System Setup
 
 ** Package Sources and Initialization
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Initialize package sources
 (require 'package)
 
@@ -55,16 +98,16 @@ Run the block below with =C-c C-c= to tangle code blocks to config file.
 
 (require 'use-package)
 (setq use-package-always-ensure t)
-#+end_src
+#+END_SRC
 
 ** Auto Update Packages
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package auto-package-update
   :init
   (auto-package-update-maybe)
 )
-#+end_src
+#+END_SRC
 
 * Basic UI Configuration
 
@@ -73,7 +116,7 @@ Run the block below with =C-c C-c= to tangle code blocks to config file.
 Disable some visual elements that are not necessary like startup message, scrollbar, toolbar, tooltips, menu bar, etc.
 Turn on the visual bell and add some breathing room.
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (setq inhibit-startup-message t) ; Disable startup message
 
 (scroll-bar-mode -1)  ; Disable visible scrollbar
@@ -84,11 +127,11 @@ Turn on the visual bell and add some breathing room.
 (menu-bar-mode -1)    ; Disable the menu bar
 
 (setq visible-bell t) ; Set up the visible bell
-#+end_src
+#+END_SRC
 
 ** Line Numbers
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Line Numbers
 (column-number-mode)
 (global-display-line-numbers-mode t)
@@ -103,13 +146,13 @@ Turn on the visual bell and add some breathing room.
         )
   (add-hook mode (lambda () (display-line-numbers-mode 0)))
 )
-#+end_src
+#+END_SRC
 
 ** Font Configuration
 
 Setup FiraCode and Cantarell fonts with specified size.
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Set the default font
 (set-face-attribute 'default nil :font sb/source-code-font :height sb/default-font-size)
 
@@ -118,7 +161,7 @@ Setup FiraCode and Cantarell fonts with specified size.
 
 ;; Set the variable pitch font
 (set-face-attribute 'variable-pitch nil :font sb/document-font :height sb/default-font-size :weight 'regular)
-#+end_src
+#+END_SRC
 
 ** Ligature Support
 
@@ -128,7 +171,7 @@ Add ligature support using Fira Code symbols.
 
 =M-x fira-code-mode-install-fonts RET=
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package fira-code-mode
   :custom
   ;; List of ligatures to turn off
@@ -139,29 +182,29 @@ Add ligature support using Fira Code symbols.
   ;; Enables fira-code-mode automatically for programming major modes
   :hook prog-mode
 )
-#+end_src
+#+END_SRC
 
 ** Tab Width
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (setq-default tab-width 4)
-#+end_src
+#+END_SRC
 
 * Keybindings
 
 ** Custom Functions
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (defun reload-config ()
   (interactive)
   (load-file user-init-file)
   (revert-buffer t t)
 )
-#+end_src
+#+END_SRC
 
 ** General
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -190,11 +233,11 @@ Add ligature support using Fira Code symbols.
 (general-define-key
  "C-M-j" 'counsel-switch-buffer
 )
-#+end_src
+#+END_SRC
 
 ** Evil Keybindings
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Evil Keybindings
 (use-package evil
   :init
@@ -226,13 +269,13 @@ Add ligature support using Fira Code symbols.
   :config
   (evilem-default-keybindings "SPC")
 )
-#+end_src
+#+END_SRC
 
 * UI Configuration
 
 ** Color Theme
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Dracula Doom Theme
 (use-package doom-themes
   :init (load-theme 'doom-dracula t)
@@ -241,21 +284,21 @@ Add ligature support using Fira Code symbols.
 ;; ;; Dracula Pro Theme
 ;; (add-to-list 'custom-theme-load-path "~/.config/emacs/themes")
 ;; (load-theme 'dracula-pro t)
-#+end_src
+#+END_SRC
 ** Better Modeline
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Doom Modeline
 (use-package doom-modeline
   :ensure t
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height sb/modeline-height))
 )
-#+end_src
+#+END_SRC
 
 ** Dashboard
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Emacs Dashboard
 (use-package dashboard
   :ensure t
@@ -279,18 +322,18 @@ Add ligature support using Fira Code symbols.
   ;; Use with counsel-projectile
   (setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
 )
-#+end_src
+#+END_SRC
 
 ** Which Key
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 1)
 )
-#+end_src
+#+END_SRC
 
 ** Ivy and Counsel
 
@@ -298,7 +341,7 @@ Add ligature support using Fira Code symbols.
 
 =M-x all-the-icons-install-fonts RET=
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Ivy Autocompletion
 (use-package ivy
   :diminish
@@ -342,11 +385,11 @@ Add ligature support using Fira Code symbols.
   :config
   (counsel-mode 1)
 )
-#+end_src
+#+END_SRC
 
 ** Helpful Help Commands
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Helpful
 (use-package helpful
   :custom
@@ -358,13 +401,13 @@ Add ligature support using Fira Code symbols.
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key)
 )
-#+end_src
+#+END_SRC
 
 ** Text Scaling
 
 Use Hydra to design a transient key binding for quickly adjusting the scale of the text on screen.
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Hydra
 (use-package hydra)
 
@@ -374,11 +417,11 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t)
 )
-#+end_src
+#+END_SRC
 
 ** Highlight Indent Guides
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
   :hook (text-mode . highlight-indent-guides-mode)
@@ -387,13 +430,13 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
   (setq highlight-indent-guides-responsive 'stack)
   (setq highlight-indent-guides-delay 0)
 )
-#+end_src
+#+END_SRC
 
 * Org Mode
 
 ** Better Font Faces
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (defun sb/org-font-setup ()
   ;; ;; Replace list hyphen with dot
   ;; (font-lock-add-keywords 'org-mode
@@ -421,11 +464,11 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 )
-#+end_src
+#+END_SRC
 
 ** Main Config
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (defun sb/org-mode-setup ()
   (org-indent-mode)
   (variable-pitch-mode 1)
@@ -575,11 +618,11 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
 
   (sb/org-font-setup)
 )
-#+end_src
+#+END_SRC
 
 ** Heading Bullets
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
   (use-package org-bullets
     :after org
     :hook (org-mode . org-bullets-mode)
@@ -588,12 +631,12 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
     :init
     (setq inhibit-compacting-font-caches t)
   )
-#+end_src
+#+END_SRC
 
 ** Center Org Buffers
 
 *NOT IN USE*
-#+begin_src emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle no
 (defun sb/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
         visual-fill-column-center-text t)
@@ -603,11 +646,11 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
 (use-package visual-fill-column
   :hook (org-mode . sb/org-mode-visual-fill)
 )
-#+end_src
+#+END_SRC
 
 ** Configure Babel Languages
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (org-babel-do-load-languages
   'org-babel-load-languages
   '((emacs-lisp . t)
@@ -616,11 +659,11 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
 )
 
 (push '("conf-unix" . conf-unix) org-src-lang-modes)
-#+end_src
+#+END_SRC
 
 ** Structure Templates
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; This is needed as of Org 9.2
 (require 'org-tempo)
 
@@ -629,29 +672,29 @@ Use Hydra to design a transient key binding for quickly adjusting the scale of t
 (add-to-list 'org-structure-template-alist '("py" . "src python"))
 (add-to-list 'org-structure-template-alist '("hs" . "src haskell"))
 (add-to-list 'org-structure-template-alist '("cf" . "src config"))
-#+end_src
+#+END_SRC
 
 ** Auto-Tangle
 
 Automatically tangle code blocks in file everytime it is saved.
 Add =#+auto_tangle: t= to the org document to enable this.
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package org-auto-tangle
   :defer t
   :hook (org-mode . org-auto-tangle-mode)
 )
-#+end_src
+#+END_SRC
 
 * Development
 
 ** Commenting
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package evil-nerd-commenter
   :bind ("M-/" . evilnc-comment-or-uncomment-lines)
 )
-#+end_src
+#+END_SRC
 
 ** Languages
 
@@ -659,49 +702,49 @@ Add =#+auto_tangle: t= to the org document to enable this.
 
 **** Fish Shell
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package fish-mode)
-#+end_src
+#+END_SRC
 
 **** Git Attributes 
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package gitattributes-mode)
-#+end_src
+#+END_SRC
 
 **** Git Config 
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package gitconfig-mode)
-#+end_src
+#+END_SRC
 
 **** Git Ignore 
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package gitignore-mode)
-#+end_src
+#+END_SRC
 
 **** Haskell
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package haskell-mode)
-#+end_src
+#+END_SRC
 
 **** Vimrc
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package vimrc-mode)
-#+end_src
+#+END_SRC
 
 **** C / C++
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package cc-mode)
-#+end_src
+#+END_SRC
 
 *** Language Servers
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (defun sb/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode)
@@ -727,11 +770,11 @@ Add =#+auto_tangle: t= to the org document to enable this.
 )
 
 (use-package lsp-ivy)
-#+end_src
+#+END_SRC
 
 *** Company Mode
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 (use-package company
   :after lsp-mode
   :hook (lsp-mode . company-mode)
@@ -748,11 +791,11 @@ Add =#+auto_tangle: t= to the org document to enable this.
 (use-package company-box
   :hook (company-mode . company-box-mode)
 )
-#+end_src
+#+END_SRC
 
 ** Projectile
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Projectile
 (use-package projectile
   :diminish projectile-mode
@@ -768,23 +811,23 @@ Add =#+auto_tangle: t= to the org document to enable this.
 (use-package counsel-projectile
   :config (counsel-projectile-mode)
 )
-#+end_src
+#+END_SRC
 
 ** Magit
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
   ;; Magit
   (use-package magit
     :custom
     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   )
-#+end_src
+#+END_SRC
 
 *NOT IN USE*
 
 *NOTE*: evil-magit was removed from MELPA and now a part of evil-collection
 
-#+begin_src emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package evil-magit
   :after magit
 )
@@ -793,14 +836,13 @@ Add =#+auto_tangle: t= to the org document to enable this.
 ;; - https://magit.vc/manual/forge/Token-Creation.html#Token-Creation
 ;; - https://magit.vc/manual/ghub/Getting-Started.html#Getting-Started
 (use-package forge)
-#+end_src
+#+END_SRC
 
 ** Rainbow Delimeters
 
-#+begin_src emacs-lisp :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el
 ;; Rainbow Delimiters
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode)
 )
-#+end_src
-
+#+END_SRC
