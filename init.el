@@ -4,7 +4,7 @@
 (defvar sb/modeline-height 10)
 
 ;; Font Names
-(defvar sb/source-code-font "FiraCode Nerd Font")
+(defvar sb/source-code-font "MonaspiceNe NF")
 (defvar sb/document-font "Cantarell")
 
 ;; Initialize package sources
@@ -450,14 +450,14 @@
   (sb/org-font-setup)
 )
 
-(use-package org-bullets
-  :after org
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
-  :init
-  (setq inhibit-compacting-font-caches t)
-)
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode)
+    :custom
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●"))
+    :init
+    (setq inhibit-compacting-font-caches t)
+  )
 
 (org-babel-do-load-languages
   'org-babel-load-languages
@@ -559,11 +559,11 @@
   :config (counsel-projectile-mode)
 )
 
-;; Magit
-(use-package magit
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-)
+  ;; Magit
+  (use-package magit
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  )
 
 ;; Rainbow Delimiters
 (use-package rainbow-delimiters

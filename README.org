@@ -67,7 +67,7 @@ Run the block below with =C-c C-c= to tangle code blocks to config file.
 (defvar sb/modeline-height 10)
 
 ;; Font Names
-(defvar sb/source-code-font "FiraCode Nerd Font")
+(defvar sb/source-code-font "MonaspiceNe NF")
 (defvar sb/document-font "Cantarell")
 #+END_SRC
 
